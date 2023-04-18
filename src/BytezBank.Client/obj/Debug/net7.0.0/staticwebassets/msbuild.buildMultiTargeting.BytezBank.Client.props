@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/BytezBank.Client.props" />
+</Project>

@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "/home/stevie/Documents/testprograms/F#/Bolero/BytezBank/src/BytezBank.Client/bin/Debug/net7.0/wwwroot/_framework/blazor.webassembly.js",
+      "PackagePath": "staticwebassets/_framework/blazor.webassembly.js"
+    },
+    {
+      "Id": "/home/stevie/Documents/testprograms/F#/Bolero/BytezBank/src/BytezBank.Client/obj/Debug/net7.0/build-gz/WP1aXC+7.gz",
+      "PackagePath": "staticwebassets/_framework/blazor.webassembly.js.gz"
+    },
+    {
+      "Id": "/home/stevie/Documents/testprograms/F#/Bolero/BytezBank/src/BytezBank.Client/wwwroot/css/index.css",
+      "PackagePath": "staticwebassets/css/index.css"
+    },
+    {
+      "Id": "/home/stevie/Documents/testprograms/F#/Bolero/BytezBank/src/BytezBank.Client/wwwroot/favicon.ico",
+      "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/home/stevie/Documents/testprograms/F#/Bolero/BytezBank/src/BytezBank.Client/wwwroot/main.html",
+      "PackagePath": "staticwebassets/main.html"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.BytezBank.Client.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.build.BytezBank.Client.props",
+      "PackagePath": "build\\BytezBank.Client.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.BytezBank.Client.props",
+      "PackagePath": "buildMultiTargeting\\BytezBank.Client.props"
+    },
+    {
+      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.BytezBank.Client.props",
+      "PackagePath": "buildTransitive\\BytezBank.Client.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

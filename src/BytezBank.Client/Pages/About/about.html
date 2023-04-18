@@ -1,0 +1,36 @@
+<template id="About">
+  <div class="text-center mt-5 px-xs-2 px-sm-4 page-width">
+    <h1>
+      Welcome to Bytes Bank!
+    </h1>
+    <h2>
+      A bank to store all of your fake Bytez currency!
+    </h2>
+    <p>
+      Bytes bank solely uses our custom and totally useless currency Bytez. This is a
+      demo application that uses Bolero, which is a framework that enables Web Assembly
+      applications written in F#, a functional programming language. This demo app
+      runs in full Web Assembly mode. Login or create a new user account to get started.
+    </p>
+    <div class="row">
+      <div class="col">
+        <button
+          type     = "button"
+          class    = "btn btn-primary"
+          on.click = "${GotoLogin}"
+        >
+          Login
+        </button>
+      </div>
+        <div class="col">
+          <button
+            type     = "button"
+            class    = "btn btn-primary"
+            on.click = "${GotoCreateUser}"
+          >
+          Create Account
+        </button>
+      </div>
+    </div>
+  </div>
+</template>

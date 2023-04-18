@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/home/stevie/.nuget/packages/</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/home/stevie/.nuget/packages/</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.5.0</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="/home/stevie/.nuget/packages/" />
+  </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.components.webassembly/7.0.0/build/net7.0/Microsoft.AspNetCore.Components.WebAssembly.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.components.webassembly/7.0.0/build/net7.0/Microsoft.AspNetCore.Components.WebAssembly.props')" />
+  </ImportGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgMicrosoft_AspNetCore_Components_WebAssembly_DevServer Condition=" '$(PkgMicrosoft_AspNetCore_Components_WebAssembly_DevServer)' == '' ">/home/stevie/.nuget/packages/microsoft.aspnetcore.components.webassembly.devserver/7.0.4</PkgMicrosoft_AspNetCore_Components_WebAssembly_DevServer>
+    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">/home/stevie/.nuget/packages/fsharp.core/7.0.200</PkgFSharp_Core>
+    <PkgBolero Condition=" '$(PkgBolero)' == '' ">/home/stevie/.nuget/packages/bolero/0.21.25</PkgBolero>
+    <PkgBolero_HotReload Condition=" '$(PkgBolero_HotReload)' == '' ">/home/stevie/.nuget/packages/bolero.hotreload/0.21.4</PkgBolero_HotReload>
+    <PkgBolero_Build Condition=" '$(PkgBolero_Build)' == '' ">/home/stevie/.nuget/packages/bolero.build/0.21.25</PkgBolero_Build>
+  </PropertyGroup>
+</Project>
