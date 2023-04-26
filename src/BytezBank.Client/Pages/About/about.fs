@@ -8,7 +8,8 @@ open Bolero.Remoting
 open Bolero.Remoting.Client
 open Bolero.Templating.Client
 
-open BytezBank.Client.Store
+open BytezBank.Client.Store.Store
+open BytezBank.Client.Store.Login
 
 
 type About = Template<"Pages/About/about.html">
@@ -16,6 +17,6 @@ type About = Template<"Pages/About/about.html">
 let aboutPage model dispatch =
   About
     .About()
-    .GotoLogin(      fun e -> SetPage Page.Login      |> dispatch )
+    .GotoLogin(      fun e -> SetPage (Page.Login Router.noModel)  |> dispatch )
     .GotoCreateUser( fun e -> SetPage Page.CreateUser |> dispatch )
     .Elt()

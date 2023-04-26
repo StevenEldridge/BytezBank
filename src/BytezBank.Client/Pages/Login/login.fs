@@ -5,6 +5,7 @@ open System.Net
 open System.Net.Http
 open System.Net.Http.Headers
 open System.Threading.Tasks
+open System
 open Elmish
 open Bolero
 open Bolero.Html
@@ -12,27 +13,28 @@ open Bolero.Remoting
 open Bolero.Remoting.Client
 open Bolero.Templating.Client
 
-open BytezBank.Client.Store
+open BytezBank.Client.Store.Store
+open BytezBank.Client.Store.Login
+
 
 type Login = Template<"Pages/Login/login.html">
 
-type Model = {
-  username: string
-  password: string
-}
-
-type Message =
-  | SetUsername of string
-  | SetPassword of string
-
-let login =
-  NotImplementedException
+let loginUser (pageModel: PageModel<LoginState.Model>) =
+  printfn "Logging in user"
+  pageModel.Model.username |> printfn "User: %s"
+  pageModel.Model.password |> printfn "Pass: %s"
+  // TODO: Contact API
 
 
-let loginPage model dispatch =
+let loginPage (model: Model) (pageModel: PageModel<LoginState.Model>) (dispatch: Message -> Unit) =
   Login
     .Login()
-    .Username( model.username, fun user -> SetUsername user |> dispatch )
-    .Password( model.password, fun pass -> SetPassword pass |> dispatch )
-    .LoginUser(fun e -> printfn "NOT IMPLEMENTED")
+    .Username( (pageModel.Model.username), fun x ->
+      LoginState.SetUsername x |> LoginMessage |> SetPageMessage |> dispatch
+    )
+    .Password( (pageModel.Model.password), fun x ->
+      LoginState.SetPassword x |> LoginMessage |> SetPageMessage |> dispatch
+    )
+    .LoginUser( fun e -> loginUser pageModel )
     .Elt()
+

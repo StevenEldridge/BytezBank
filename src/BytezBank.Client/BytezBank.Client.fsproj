@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Store/PageModels/loginModel.fs" />
     <Compile Include="Store/Store.fs" />
     <Compile Include="Pages/CreateUser/createUser.fs" />
     <Compile Include="Pages/About/about.fs" />
