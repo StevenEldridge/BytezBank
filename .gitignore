@@ -1,3 +1,14 @@
-/BytezBank.sln
-/src/BytezBank.Client/bin
-/src/BytezBank.Client/obj
+.DS_Store
+bin/
+obj/
+.vs/
+*.user
+.idea/
+.ionide/
+paket-files/
+packages/
+.fake/
+build/
+TestResults/
+.paket/
+src/Bolero.Templating/content/
