@@ -3,10 +3,6 @@ module BytezBank.Client.Store.Login
 open System
 open Elmish
 open Bolero
-open Bolero.Html
-open Bolero.Remoting
-open Bolero.Remoting.Client
-open Bolero.Templating.Client
 
 
 module LoginState =

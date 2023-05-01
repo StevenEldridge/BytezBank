@@ -29,6 +29,7 @@ type Startup() =
             .AddHotReload(templateDir = __SOURCE_DIRECTORY__ + "/../BytezBank.Client")
 #endif
         |> ignore
+        BytezBank.Client.Program.Inject services
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =

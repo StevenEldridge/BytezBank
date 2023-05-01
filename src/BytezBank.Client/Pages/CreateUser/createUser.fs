@@ -3,10 +3,8 @@ module BytezBank.Client.Pages.CreateUser
 open System
 open Elmish
 open Bolero
-open Bolero.Html
-open Bolero.Remoting
-open Bolero.Remoting.Client
-open Bolero.Templating.Client
+
+open BytezBank.Client.Store.Store
 
 type CreateUser = Template<"Pages/CreateUser/createUser.html">
 

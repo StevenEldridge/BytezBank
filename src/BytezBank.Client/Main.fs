@@ -1,18 +1,20 @@
 module BytezBank.Client.Main
 
 open System
+open System.Net.Http
+open Microsoft.AspNetCore.Components
 open Elmish
 open Bolero
 open Bolero.Html
-open Bolero.Remoting
-open Bolero.Remoting.Client
 open Bolero.Templating.Client
 
+open BytezBank.Client.Components.Error
 open BytezBank.Client.Store.Store
 open BytezBank.Client.Store.Login
 open BytezBank.Client.Pages.About
 open BytezBank.Client.Pages.Login
 open BytezBank.Client.Pages.CreateUser
+open BytezBank.Client.Services.UserAccount
 
 let defaultModel = function
   | About       -> ()
@@ -26,6 +28,11 @@ type Main  = Template<"wwwroot/main.html">
 
 let view (model: Model) (dispatch: Message -> Unit) =
   Main.Main()
+    .ErrorComponent(
+      match model.error with
+      | Some error -> errorComponent (error.ToString())
+      | None       -> empty()
+    )
     .Body(
       match model.page with
       | About                 -> aboutPage      model dispatch
@@ -37,8 +44,13 @@ let view (model: Model) (dispatch: Message -> Unit) =
 type MyApp() =
   inherit ProgramComponent<Model, Message>()
 
+  [<Inject>]
+  member val UserAccountService = Unchecked.defaultof<UserAccount.UserAccountService> with get, set
+
   override this.Program =
-    Program.mkSimple (fun _ -> initModel) update view
+    let update = update this.UserAccountService
+
+    Program.mkProgram (fun _ -> initModel, Cmd.none) update view
     |> Program.withRouter router
 #if DEBUG
     |> Program.withHotReload

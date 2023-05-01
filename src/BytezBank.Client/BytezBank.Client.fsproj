@@ -2,10 +2,14 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <RuntimeFrameworkVersion>7.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Store/PageModels/loginModel.fs" />
+    <Compile Include="Services/UserAccount.fs" />
+    <Compile Include="Services/BankAccount.fs" />
     <Compile Include="Store/Store.fs" />
+    <Compile Include="Components/Error/error.fs" />
     <Compile Include="Pages/CreateUser/createUser.fs" />
     <Compile Include="Pages/About/about.fs" />
     <Compile Include="Pages/Login/login.fs" />
@@ -16,6 +20,8 @@
     <PackageReference Include="Bolero" Version="0.*" />
     <PackageReference Include="Bolero.Build" Version="0.*" />
     <PackageReference Include="Bolero.HotReload" Version="0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.*" />
+    <PackageReference Include="Hopac" Version="0.5.1" />
+    <PackageReference Include="Http.fs" Version="5.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.4" />
   </ItemGroup>
 </Project>

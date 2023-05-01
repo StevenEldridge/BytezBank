@@ -1,6 +1,7 @@
 module BytezBank.Client.Store.Store
 
 open System
+open System.Net.Http
 open Elmish
 open Bolero
 open Bolero.Html
@@ -9,6 +10,7 @@ open Bolero.Remoting.Client
 open Bolero.Templating.Client
 
 open BytezBank.Client.Store.Login
+open BytezBank.Client.Services.UserAccount
 
 
 /// Routing endpoints definition.
@@ -25,11 +27,15 @@ type Page =
 
 /// The Elmish application's model.
 type Model = {
-  page: Page
+  page:  Page
+  token: string option
+  error: string option
 }
 
 let initModel = {
-  page = About
+  page  = About
+  token = None
+  error = None
 }
 
 type PageMessage =
@@ -37,8 +43,12 @@ type PageMessage =
 
 // The Elmish application's update messages.
 type Message =
-  | SetPage of Page
+  | SetPage        of Page
   | SetPageMessage of PageMessage
+  | APILogin       of string * string
+  | RevLogin       of Result<string, string>
+  | ErrorMsg       of exn
+  | ClearError
 
 let updateSetPage (page: Page) (model: Model) = { model with page = page }, Cmd.none
 
@@ -49,8 +59,21 @@ let updatePageModel message model =
     }
   | _ -> model
 
-let update message model =
+let rec update (userAccountService: UserAccount.UserAccountService) message model =
   match message with
-  | SetPage        page -> { model with page = page }
-  | SetPageMessage mes  -> updatePageModel mes model
+  | SetPage        page -> { model with page = page }, Cmd.none
+  | SetPageMessage mes  -> updatePageModel mes model, Cmd.none
+  | APILogin (user, pass)  ->
+    model, Cmd.OfAsync.either userAccountService.login (user, pass) RevLogin ErrorMsg
+  | RevLogin result      ->
+    match result with
+    | Ok token ->
+      token |> printfn "%s"
+      { model with token = Some token; error = None }, Cmd.none
+    | Error err ->
+      err |> printfn "ERROR: %s"
+      let e = new exn(err)
+      { model with error = Some e.Message }, Cmd.none
+  | ErrorMsg   exn  -> { model with error = Some exn.Message }, Cmd.none
+  | ClearError      -> { model with error = None }, Cmd.none
 

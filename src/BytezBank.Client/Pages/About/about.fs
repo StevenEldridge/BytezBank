@@ -17,6 +17,6 @@ type About = Template<"Pages/About/about.html">
 let aboutPage model dispatch =
   About
     .About()
-    .GotoLogin(      fun e -> SetPage (Page.Login Router.noModel)  |> dispatch )
-    .GotoCreateUser( fun e -> SetPage Page.CreateUser |> dispatch )
+    .GotoLogin(      fun e -> Page.Login { Model = LoginState.initModel } |> SetPage |> dispatch )
+    .GotoCreateUser( fun e -> Page.CreateUser |> SetPage |> dispatch )
     .Elt()
