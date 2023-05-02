@@ -21,9 +21,6 @@ module LoginState =
     | SetUsername of string
     | SetPassword of string
 
-  let updateSetUsername (user: string) model = { model with username = user }
-  let updateSetPassword (pass: string) model = { model with password = pass }
-
   let update message model =
     match message with
     | SetUsername user -> { model with username = user }

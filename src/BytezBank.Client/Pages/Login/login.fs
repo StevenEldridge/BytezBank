@@ -6,7 +6,8 @@ open Bolero
 
 open BytezBank.Client.Store.Store
 open BytezBank.Client.Store.Login
-open BytezBank.Client.Services.UserAccount
+open BytezBank.Client.Store.UserAccount
+open BytezBank.Client.Store.SubStateTypeMessages
 
 
 type Login = Template<"Pages/Login/login.html">
@@ -17,7 +18,9 @@ let loginUser (pageModel: PageModel<LoginState.Model>) dispatch =
   pageModel.Model.password |> printfn "Pass: %s"
 
   (pageModel.Model.username, pageModel.Model.password)
-  |> APILogin
+  |> UserAccountState.LoginUser
+  |> UserAccountRequest
+  |> ServiceRequest
   |> dispatch
 
 
@@ -26,10 +29,10 @@ let loginPage (model: Model) (pageModel: PageModel<LoginState.Model>) dispatch =
     Login
       .Login()
       .Username( (pageModel.Model.username), fun x ->
-        LoginState.SetUsername x |> LoginMessage |> SetPageMessage |> dispatch
+        LoginState.SetUsername x |> LoginMessage |> PageMessage |> dispatch
       )
       .Password( (pageModel.Model.password), fun x ->
-        LoginState.SetPassword x |> LoginMessage |> SetPageMessage |> dispatch
+        LoginState.SetPassword x |> LoginMessage |> PageMessage |> dispatch
       )
       .LoginUser( fun e -> loginUser pageModel dispatch)
       .Elt()

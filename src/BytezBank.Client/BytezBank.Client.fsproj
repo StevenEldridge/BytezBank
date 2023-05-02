@@ -6,6 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Store/PageModels/loginModel.fs" />
+    <Compile Include="Store/ServiceModels/userAccountModel.fs" />
+    <Compile Include="Store/SubStateTypeMessages.fs" />
     <Compile Include="Services/UserAccount.fs" />
     <Compile Include="Services/BankAccount.fs" />
     <Compile Include="Store/Store.fs" />

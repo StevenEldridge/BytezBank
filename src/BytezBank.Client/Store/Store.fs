@@ -10,6 +10,8 @@ open Bolero.Remoting.Client
 open Bolero.Templating.Client
 
 open BytezBank.Client.Store.Login
+open BytezBank.Client.Store.UserAccount
+open BytezBank.Client.Store.SubStateTypeMessages
 open BytezBank.Client.Services.UserAccount
 
 
@@ -27,53 +29,66 @@ type Page =
 
 /// The Elmish application's model.
 type Model = {
-  page:  Page
-  token: string option
-  error: string option
+  page:             Page
+  userAccountModel: UserAccountState.Model
+  error:            string option
 }
 
 let initModel = {
-  page  = About
-  token = None
-  error = None
+  page             = About
+  userAccountModel = UserAccountState.initModel
+  error            = None
 }
-
-type PageMessage =
-  | LoginMessage of LoginState.Message
 
 // The Elmish application's update messages.
 type Message =
   | SetPage        of Page
-  | SetPageMessage of PageMessage
-  | APILogin       of string * string
-  | RevLogin       of Result<string, string>
-  | ErrorMsg       of exn
-  | ClearError
+  | PageMessage    of PageMessage
+  | ServiceRequest of ServiceRequestMessage
+  | ServiceUpdate  of Result<ServiceUpdateMessage, string>
+  | SetErrorMsg    of exn
+  | ClearErrorMsg
 
-let updateSetPage (page: Page) (model: Model) = { model with page = page }, Cmd.none
 
 let updatePageModel message model =
   match (model.page, message) with
   | Login login, LoginMessage msg -> {
       model with page = Login { Model = LoginState.update msg login.Model }
     }
-  | _ -> model
+  | _ ->
+    printfn "Error: Trying to dispatch message for page that isn't active"
+    model
 
-let rec update (userAccountService: UserAccount.UserAccountService) message model =
+
+let requestUserAccount
+  (service: UserAccount.UserAccountService)
+  (requestMsg:            UserAccountState.RequestMessage) =
+    match requestMsg with
+    | UserAccountState.LoginUser (user, pass) ->
+      Cmd.OfAsync.either service.login (user, pass) ServiceUpdate SetErrorMsg
+
+let requestService (service: UserAccount.UserAccountService) (message: ServiceRequestMessage) =
+  match message with
+  | UserAccountRequest msg -> requestUserAccount service msg
+
+let updateServiceModel (message: ServiceUpdateMessage) model =
+  match message with
+  | UserAccountUpdate msg ->
+    { model with userAccountModel = UserAccountState.update msg model.userAccountModel }
+
+
+let update (userAccountService: UserAccount.UserAccountService) message model =
   match message with
   | SetPage        page -> { model with page = page }, Cmd.none
-  | SetPageMessage mes  -> updatePageModel mes model, Cmd.none
-  | APILogin (user, pass)  ->
-    model, Cmd.OfAsync.either userAccountService.login (user, pass) RevLogin ErrorMsg
-  | RevLogin result      ->
+  | PageMessage    msg  -> updatePageModel msg model, Cmd.none
+  | SetErrorMsg    exn  -> { model with error = Some exn.Message }, Cmd.none
+  | ClearErrorMsg       -> { model with error = None }, Cmd.none
+  | ServiceRequest msg  -> model, requestService userAccountService msg
+  | ServiceUpdate  result ->
     match result with
-    | Ok token ->
-      token |> printfn "%s"
-      { model with token = Some token; error = None }, Cmd.none
+    | Ok res -> updateServiceModel res model, Cmd.none
     | Error err ->
       err |> printfn "ERROR: %s"
       let e = new exn(err)
       { model with error = Some e.Message }, Cmd.none
-  | ErrorMsg   exn  -> { model with error = Some exn.Message }, Cmd.none
-  | ClearError      -> { model with error = None }, Cmd.none
 
