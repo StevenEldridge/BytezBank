@@ -15,6 +15,7 @@ open BytezBank.Client.Pages.About
 open BytezBank.Client.Pages.Login
 open BytezBank.Client.Pages.CreateUser
 open BytezBank.Client.Services.UserAccount
+open BytezBank.Client.Services.BankAccount
 
 let defaultModel = function
   | About       -> ()
@@ -47,8 +48,11 @@ type MyApp() =
   [<Inject>]
   member val UserAccountService = Unchecked.defaultof<UserAccount.UserAccountService> with get, set
 
+  [<Inject>]
+  member val BankAccountService = Unchecked.defaultof<BankAccount.BankAccountService> with get, set
+
   override this.Program =
-    let update = update this.UserAccountService
+    let update = update this.UserAccountService this.BankAccountService
 
     Program.mkProgram (fun _ -> initModel, Cmd.none) update view
     |> Program.withRouter router

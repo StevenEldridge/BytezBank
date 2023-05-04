@@ -6,6 +6,7 @@ open Microsoft.Extensions.DependencyInjection
 open Bolero.Remoting.Client
 
 open BytezBank.Client.Services.UserAccount
+open BytezBank.Client.Services.BankAccount
 
 
 
@@ -24,6 +25,7 @@ module Program =
 
       services.AddHttpClient() |> ignore
       services.AddSingleton<UserAccount.UserAccountService>() |> ignore
+      services.AddSingleton<BankAccount.BankAccountService>() |> ignore
 
     [<EntryPoint>]
     let Main args =

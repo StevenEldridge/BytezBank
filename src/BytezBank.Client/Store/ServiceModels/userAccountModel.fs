@@ -25,4 +25,7 @@ module UserAccountState =
   let update message model =
     match message with
     | SetToken newToken -> { model with token = Some newToken }
-    | ClearModel        -> initModel
+    | ClearModel        -> {
+      model with
+        token = None
+    }

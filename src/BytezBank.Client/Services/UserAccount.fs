@@ -18,17 +18,19 @@ module UserAccount =
 
   type UserAccountService (httpClient: HttpClient) =
 
-      member this.login: string * string -> Async<Result<ServiceUpdateMessage,string>> =
-        fun (username: string, password: string) ->
-          async {
-            use content = new StringContent("")
-            content.Headers.Add("username", username)
-            content.Headers.Add("password", password)
-            let! response = httpClient.PostAsync(connStr + "login", content) |> Async.AwaitTask
-            let! body     = response.Content.ReadAsStringAsync() |> Async.AwaitTask
-            let result =
-              match response.IsSuccessStatusCode with
-              | true  -> body |> UpdateMessage.SetToken |> UserAccountUpdate |> Ok
-              | false -> body |> Error
-            return result
-          }
+    member this.login: string * string -> Async<Result<ServiceUpdateMessage,string>> =
+      fun (username: string, password: string) ->
+        async {
+          use content = new StringContent("")
+          content.Headers.Add("username", username)
+          content.Headers.Add("password", password)
+
+          let! response = httpClient.PostAsync(connStr + "login", content) |> Async.AwaitTask
+          let! body     = response.Content.ReadAsStringAsync() |> Async.AwaitTask
+
+          let result =
+            match response.IsSuccessStatusCode with
+            | true  -> body |> UpdateMessage.SetToken |> UserAccountUpdate |> Ok
+            | false -> body |> Error
+          return result
+        }

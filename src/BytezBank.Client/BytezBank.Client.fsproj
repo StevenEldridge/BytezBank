@@ -5,8 +5,10 @@
     <RuntimeFrameworkVersion>7.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models/models.fs" />
     <Compile Include="Store/PageModels/loginModel.fs" />
     <Compile Include="Store/ServiceModels/userAccountModel.fs" />
+    <Compile Include="Store/ServiceModels/bankAccountModel.fs" />
     <Compile Include="Store/SubStateTypeMessages.fs" />
     <Compile Include="Services/UserAccount.fs" />
     <Compile Include="Services/BankAccount.fs" />
