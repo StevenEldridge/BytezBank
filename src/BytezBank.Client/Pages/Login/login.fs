@@ -26,7 +26,7 @@ let loginUser model (pageModel: PageModel<LoginState.Model>) dispatch =
     |> fun req -> ServiceRequest (req, cmd)
     |> fun x -> x |> printfn "Login:\n%A"; x
 
-  let getBankAccountIds cmd: Unit -> Message option = fun () ->
+  let getBankAccountIds cmd: Model -> Message option = fun (model: Model) ->
     model.userAccountModel.token |> printfn "Current Token: %A"
     match model.userAccountModel.token with
     | None       -> SetErrorMsg (new exn("Not authenticated")) |> Some
@@ -37,7 +37,7 @@ let loginUser model (pageModel: PageModel<LoginState.Model>) dispatch =
       |> fun req -> ServiceRequest (req, cmd)
       |> fun x -> x |> printfn "getBankAccountIds:\n%A"; x |> Some
 
-  let getBankAccount cmd: Unit -> Message option = fun () ->
+  let getBankAccount cmd: Model -> Message option = fun (model: Model) ->
     match (model.userAccountModel.token, model.bankAccountModel.bankAccountIds) with
     | None  , _                        -> SetErrorMsg (new exn("Not authenticated")) |> Some
     | Some _, None                     -> SetErrorMsg (new exn("You own no bank accounts")) |> Some
@@ -49,7 +49,7 @@ let loginUser model (pageModel: PageModel<LoginState.Model>) dispatch =
       |> fun req -> ServiceRequest (req, cmd)
       |> fun x -> x |> printfn "getBankAccount:\n%A"; x |> Some
 
-  login (getBankAccountIds(getBankAccount(fun () -> SetPage About |> Some)))
+  login (getBankAccountIds(getBankAccount(fun (model) -> SetPage About |> Some)))
   |> dispatch
   // SetPage About
   // |> fun x -> getBankAccount x

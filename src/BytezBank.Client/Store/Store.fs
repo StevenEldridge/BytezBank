@@ -34,7 +34,7 @@ type Model = {
   page:             Page
   userAccountModel: UserAccountState.Model
   bankAccountModel: BankAccountState.Model
-  nextMessage:      Unit -> Message option
+  nextMessage:      Model -> Message option
   error:            string option
 }
 
@@ -43,8 +43,10 @@ type Model = {
 and Message =
   | SetPage        of Page
   | PageMessage    of PageMessage
-  | ServiceRequest of ServiceRequestMessage * (Unit -> Message option)
+  | ServiceRequest of ServiceRequestMessage * (Model -> Message option)
   | ServiceUpdate  of Result<ServiceUpdateMessage, string>
+  | SleepThenExe   of int
+  | ExecuteNextMsg of Unit
   | SetErrorMsg    of exn
   | ClearErrorMsg
 
@@ -53,7 +55,7 @@ let initModel = {
   page             = About
   userAccountModel = UserAccountState.initModel
   bankAccountModel = BankAccountState.initModel
-  nextMessage      = fun () -> None
+  nextMessage      = fun initModel -> None
   error            = None
 }
 
@@ -97,21 +99,29 @@ let requestService
 
 
 let updateServiceModel (message: ServiceUpdateMessage) model =
-  let executeNextMessage =
-    match model.nextMessage() with
-    | Some msg -> Cmd.ofMsg msg
-    | None     -> Cmd.none
-
   match message with
   | UserAccountUpdate msg ->
     (msg, model.nextMessage) ||> printfn "UserAccountUpdate triggered with\nmsg: %A\ncmd: %A"
     { model with userAccountModel = UserAccountState.update msg model.userAccountModel },
-    executeNextMessage
+    Cmd.ofMsg (SleepThenExe 10)
 
   | BankAccountUpdate msg ->
     (msg, model.nextMessage) ||> printfn "BankAccountUpdate triggered with\nmsg: %A\ncmd: %A"
     { model with bankAccountModel = BankAccountState.update msg model.bankAccountModel },
-    executeNextMessage
+    Cmd.ofMsg (SleepThenExe 10)
+
+let sleepAsync: int -> Async<Unit> =
+  fun (ms: int) ->
+  async {
+    do! Async.Sleep(ms)
+    return ()
+  }
+
+let executeNextMessage model =
+  match model.nextMessage(model) with
+  | Some msg -> Cmd.ofMsg msg
+  | None     -> Cmd.none
+
 
 
 let update
@@ -122,16 +132,18 @@ let update
     match message with
     | SetPage        page       -> { model with page = page }, Cmd.ofMsg ClearErrorMsg
     | PageMessage    msg        -> updatePageModel msg model, Cmd.none
-    | SetErrorMsg    exn        -> { model with error = Some exn.Message; nextMessage = fun () -> None }, Cmd.none
+    | SetErrorMsg    exn        -> { model with error = Some exn.Message; nextMessage = fun model -> None }, Cmd.none
     | ClearErrorMsg             -> { model with error = None }, Cmd.none
+    | SleepThenExe   time       -> model, Cmd.OfAsync.either sleepAsync time ExecuteNextMsg SetErrorMsg
+    | ExecuteNextMsg ()         -> model, executeNextMessage model
     | ServiceRequest (msg, cmd) ->
       { model with nextMessage = cmd },
       requestService userAccountService bankAccountService msg
     | ServiceUpdate  result     ->
       match result with
-      | Ok res -> updateServiceModel res model
+      | Ok    res -> updateServiceModel res model
       | Error err ->
         err |> printfn "ERROR: %s"
         let e = new exn(err)
-        { model with error = Some e.Message; nextMessage = fun () -> None }, Cmd.none
+        { model with error = Some e.Message; nextMessage = fun model -> None }, Cmd.none
 
